@@ -1,15 +1,12 @@
 import './App.css'
+import Header from './components/Header'
 
 function App() {
   return ( // los class se cambian por className en React, ya que class es una palabra reservada en JS
     // tambien se cambia datetime por dateTime en React, ya que es case sensitive
     <div className="app-container">
         
-        <header className="app-header">
-            <button className="icon-btn" aria-label="Abrir menú">Abrir menú</button>
-            <h1>Mis movimientos</h1>
-            <button className="icon-btn" aria-label="Ver notificaciones">Ver notificaciones</button>
-        </header>
+        <Header />
 
         <main>
             <section className="balance-card">
