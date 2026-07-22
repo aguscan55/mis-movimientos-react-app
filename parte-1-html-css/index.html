@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Movimientos - Billetera Virtual</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="app-header">
+            <button class="icon-btn" aria-label="Abrir menú">Menú</button>
+            <h1>Mis movimientos</h1>
+            <button class="icon-btn" aria-label="Ver notificaciones">Ver notificaciones</button>
+        </header>
+
+        <main>
+            <section class="balance-card">
+                <div class="balance-info">
+                    <p class="text-small">Saldo disponible</p>
+                    <h2 class="balance-amount">$ 125.430,50</h2>
+                    <p class="text-small">Última actualización: Hoy 09:40</p>
+                </div>
+                <button class="icon-btn" aria-label="Ocultar saldo">Ocultar saldo</button>
+            </section>
+
+            <section class="movements-section">
+                <div class="section-title-row">
+                    <h3>Movimientos recientes</h3>
+                    <a href="#" class="link-primary">Ver todos</a>
+                </div>
+
+                <ul class="movements-list">
+                    <li>
+                        <article class="movement-item">
+                            <div class="icon-box icon-income">↓</div>
+                            <div class="movement-details">
+                                <h4>Transferencia recibida</h4>
+                                <time datetime="2026-06-20">20 Jun 2026 - 09:15</time>
+                            </div>
+                            <div class="movement-amount amount-income">+ $15.000,00</div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="movement-item">
+                            <div class="icon-box icon-expense">↑</div>
+                            <div class="movement-details">
+                                <h4>Pago en supermercado</h4>
+                                <time datetime="2026-06-21">21 Jun 2026 - 14:23</time>
+                            </div>
+                            <div class="movement-amount amount-expense">- $8.500,00</div>
+                        </article>
+                    </li>
+                </ul>
+
+                <button class="btn-outline"> Ver más movimientos</button>
+            </section>
+        </main>
+
+        <footer class="bottom-nav">
+            <nav>
+                <a href="#" class="nav-item"> Inicio</a>
+                <a href="#" class="nav-item active"> Movimientos</a>
+                <a href="#" class="nav-item"> Tarjetas</a>
+                <a href="#" class="nav-item"> Perfil</a>
+            </nav>
+        </footer>
+    </div>
+</body>
+</html>

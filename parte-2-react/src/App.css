@@ -1,0 +1,93 @@
+/* variables */
+:root {
+    /* colores sacados de la imagen */
+    --color-primary: #6C4DF6;
+    --color-primary-light: #EDE9FE;
+    --color-income: #22C55E;
+    --color-expense: #EF4444;
+    --color-text-main: #111827;
+    --color-text-muted: #6B7280;
+    --color-bg-app: #F3F4F6;
+    --color-bg-card: #FFFFFF;
+
+    /* espacios q saque de la imagen de referencia */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --radius-md: 12px;
+    --radius-lg: 24px;
+}
+
+/* para todas las etiquetas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif; /* Tipografía por defecto limpia */
+}
+
+body {
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
+    display: flex;
+    justify-content: center;
+}
+
+/* la clase que va a tener la pantalla del telefono */
+.app-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--color-bg-card);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-lg);
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.movement-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.movement-details {
+    /* Flex-grow: 1 hace que este contenedor ocupe todo el espacio sobrante, 
+       empujando el monto hacia la derecha */
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--spacing-md);
+}
+
+.movement-details h4 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.movement-details time {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.amount-income {
+    color: var(--color-income);
+    font-weight: 600;
+}
+
+.amount-expense {
+    color: var(--color-expense);
+    font-weight: 600;
+}
