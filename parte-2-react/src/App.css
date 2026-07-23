@@ -10,7 +10,7 @@
     --color-bg-app: #F3F4F6;
     --color-bg-card: #FFFFFF;
 
-    /* espacios q saque de la imagen de referencia */
+    /* espacios que saque de la imagen de referencia */
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
@@ -31,6 +31,9 @@ body {
     color: var(--color-text-main);
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px 0;
 }
 
 /* la clase que va a tener la pantalla del telefono */
@@ -46,7 +49,7 @@ body {
 .app-header {
     background-color: var(--color-primary);
     color: white;
-    padding: var(--spacing-lg);
+    padding: calc(var(--spacing-lg) + 4px);
     
     display: flex;
     flex-direction: row;
@@ -54,17 +57,51 @@ body {
     align-items: center;
 }
 
+.balance-card {
+    margin: 0 var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    background-color: #ffffff;
+}
+
+.movements-section {
+    padding: 0 var(--spacing-md) var(--spacing-lg);
+}
+
+.section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.movements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .movement-item {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: var(--spacing-md) 0;
+    padding: 16px;
     border-bottom: 1px solid #E5E7EB;
 }
 
 .movement-details {
     /* Flex-grow: 1 hace que este contenedor ocupe todo el espacio sobrante, 
-       empujando el monto hacia la derecha */
+    empujando el monto hacia la derecha */
     flex-grow: 1; 
     display: flex;
     flex-direction: column;
