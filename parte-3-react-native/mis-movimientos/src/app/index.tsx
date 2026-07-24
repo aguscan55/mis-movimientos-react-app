@@ -6,6 +6,7 @@ import MovementItem from '@/components/movement-item'
 import { movements } from '@/data/movements'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
+import Header from '@/components/Header'
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme'
 
 export default function HomeScreen() {
@@ -23,19 +24,21 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedText type="title" style={styles.title}>
-          Mis movimientos
-        </ThemedText>
+        <Header />
 
         <ThemedView style={styles.balanceCard}>
           <ThemedView>
-            <Text style={styles.caption}>Saldo disponible</Text>
-            <Text style={styles.balanceText}>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.caption}>
+              Saldo disponible
+            </ThemedText>
+            <ThemedText style={styles.balanceText}>
               {showBalance
                 ? `$ ${balance.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`
                 : '••••••'}
-            </Text>
-            <Text style={styles.subtitle}>Última actualización: Hoy 09:40</Text>
+            </ThemedText>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.subtitle}>
+              Última actualización: Hoy 09:40
+            </ThemedText>
           </ThemedView>
           <Pressable style={styles.balanceButton} onPress={() => setShowBalance((prev) => !prev)}>
             <Text style={styles.balanceButtonText}>{showBalance ? 'Ocultar saldo' : 'Mostrar saldo'}</Text>
@@ -43,8 +46,12 @@ export default function HomeScreen() {
         </ThemedView>
 
         <ThemedView style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Movimientos recientes</Text>
-          <Text style={styles.link}>Ver todos</Text>
+          <ThemedText type="smallBold" style={styles.sectionTitle}>
+            Movimientos recientes
+          </ThemedText>
+          <ThemedText type="link" themeColor="primary" style={styles.link}>
+            Ver todos
+          </ThemedText>
         </ThemedView>
 
         <ThemedView style={styles.filterRow}>
@@ -52,19 +59,25 @@ export default function HomeScreen() {
             style={[styles.filterButton, filter === 'all' && styles.filterButtonActive]}
             onPress={() => setFilter('all')}
           >
-            <Text style={[styles.filterText, filter === 'all' && styles.filterTextActive]}>Todos</Text>
+            <ThemedText type="smallBold" style={[styles.filterText, filter === 'all' && styles.filterTextActive]}>
+              Todos
+            </ThemedText>
           </Pressable>
           <Pressable
             style={[styles.filterButton, filter === 'income' && styles.filterButtonActive]}
             onPress={() => setFilter('income')}
           >
-            <Text style={[styles.filterText, filter === 'income' && styles.filterTextActive]}>Ingresos</Text>
+            <ThemedText type="smallBold" style={[styles.filterText, filter === 'income' && styles.filterTextActive]}>
+              Ingresos
+            </ThemedText>
           </Pressable>
           <Pressable
             style={[styles.filterButton, filter === 'expense' && styles.filterButtonActive]}
             onPress={() => setFilter('expense')}
           >
-            <Text style={[styles.filterText, filter === 'expense' && styles.filterTextActive]}>Egresos</Text>
+            <ThemedText type="smallBold" style={[styles.filterText, filter === 'expense' && styles.filterTextActive]}>
+              Egresos
+            </ThemedText>
           </Pressable>
         </ThemedView>
 

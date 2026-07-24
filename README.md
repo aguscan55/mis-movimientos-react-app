@@ -8,7 +8,7 @@ Para la parte 2 cree el proyecto utilizando Vite y copié el html usado en la pa
 
 Decisiones: Use Vite para el proyecto en React porque me resulta rápido y fácil. Separé la Home en 3 componentes pequeños. 
 
-La parte 3 requirió mucha investigación porque tuve que entender las diferencias entre React web y React Native. Encontré un video que las explicaba y sobre el cual me basé para hacer un montón de referencias con respecto al proyecto (https://www.youtube.com/watch?v=TvieMHWkOKM&t=42s). Gracias a eso tomé la decisión de usar Expo para crear el proyecto, pudiendo ver los cambios en mi propio teléfono.
+La parte 3 requirió mucha investigación porque tuve que entender las diferencias entre React web y React Native. Encontré un video que las explicaba y sobre el cual me basé para un montón de referencias con respecto al proyecto (https://www.youtube.com/watch?v=TvieMHWkOKM&t=42s). Gracias a eso tomé la decisión de usar Expo para crear el proyecto, pudiendo ver los cambios en mi propio teléfono.
 
 La primer diferencia entre React web y Native que noté fue por ejemplo todo el texto debe ir en <Text> (en este caso use <ThemedText> porque ya venía con Expo). Es decir utilizamos componentes nativos en lugar de tags HTML. Así que a diferencia de el pasaje de la parte 1 a la parte 2, que el código HTML era casi igual y fue reutilizable, en la parte 3 tuve que volver a escribir el código del maquetado, investigando qué componentes nativos utilizar.
 Otra diferencia es que React Native no utiliza el DOM como React, porque corre sobre una aplicacion y no sobre la web.
@@ -26,6 +26,43 @@ Además, me costó la lógica de mostrar/ocultar el saldo con useState.
         ########### Qué mejoraría si tuviera más tiempo #############
 Limpiar el proyecto Expo y sacar archivos de plantilla innecesarios.
 Entender como funciona el routing en React Native, por lo que vi es distinto a React Web, utiliza Stack. No pude investigar lo suficiente cómo agregar la funcionalidad de moverse a otra ruta.
+Encontré una biblioteca para testing: @testing-library/react-native, pero no llegué a utilizarla. Agregaría tests luego de tener algunas otras funcionalidades.
 No agregué casi nada de accesibilidad, asi que tambien es un punto a mejorar.
 
+Para correr el proyecto hace faltar instalar node.js y npm. Luego correr npm start sobre la carpeta parte-3-react-native/mis-movimientos.
 
+Los componentes que cree fueron: src/components/Header.tsx, src/components/movement-item.tsx. Luego otro archivo que modifiqué fue src/app/index.tsx.
+
+
+Preguntas:
+1) ¿Qué diferencias encontraste entre HTML y JSX?
+
+En JSX no se usa class, se usa className.
+Se pueden escribir expresiones JavaScript dentro de {}.
+En JSX el HTML debe estar contenido en un solo elemento padre.
+
+2) ¿Qué ventajas te dio separar la pantalla en componentes?
+
+Dejó el código más ordenado.
+Facilitó reutilizar partes como MovementItem.
+Se me hizo más simple cambiar cada sección.
+Me permitió pensar en cada bloque como una pieza independiente.
+
+3)
+En CSS uso selectores, clases y reglas globales. En React Native uso objetos JavaScript con StyleSheet.create.
+No hay propiedades como margin: 0 auto ni pseudo-clases.
+Todo es inline-style (EN RN) no existe la cascada de CSS
+
+4) Por qué en React Native no existen etiquetas como div o p?
+
+porque React Native no renderiza HTML, renderiza componentes nativos. Se usan componentes específicos de mobile, no etiquetas web.
+
+5) ¿Cuándo elegirías renderizar una lista con map() y cuándo utilizarías FlatList?
+
+Creo que se usa map() cuando la lista es pequeña y no necesito scrollear.
+Uso FlatList cuando la lista es scrollable y puede crecer, porque optimiza el renderizado y tiene mejor performance en mobile.
+
+6) ¿Qué parte del ejercicio requirió mayor investigación?
+
+La parte 3 con React Native, tuve que investigar cómo armar la interfaz con componentes nativos en lugar de etiquetas.
+También investigué cómo funciona Expo y qué hacen ThemedText y ThemedView que venian ya por defecto cuando hice el proyecto de expo en mi pc.

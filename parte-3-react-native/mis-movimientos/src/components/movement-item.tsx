@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
+import { ThemedText } from './themed-text'
 import type { Movement } from '@/data/movements'
 
 type Props = {
@@ -22,13 +23,15 @@ export default function MovementItem({ movement }: Props) {
       </View>
 
       <View style={styles.details}>
-        <Text style={styles.title}>{movement.title}</Text>
-        <Text style={styles.date}>{formatDate(movement.date)}</Text>
+        <ThemedText style={styles.title}>{movement.title}</ThemedText>
+        <ThemedText type="small" themeColor="textSecondary" style={styles.date}>
+          {formatDate(movement.date)}
+        </ThemedText>
       </View>
 
-      <Text style={[styles.amount, isIncome ? styles.amountIncome : styles.amountExpense]}>
+      <ThemedText style={[styles.amount, isIncome ? styles.amountIncome : styles.amountExpense]}>
         {isIncome ? '+' : '-'} ${movement.amount.toLocaleString('es-AR')}
-      </Text>
+      </ThemedText>
     </View>
   )
 }
