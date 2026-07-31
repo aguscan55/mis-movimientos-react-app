@@ -66,3 +66,7 @@ Uso FlatList cuando la lista es scrollable y puede crecer, porque optimiza el re
 
 La parte 3 con React Native, tuve que investigar cómo armar la interfaz con componentes nativos en lugar de etiquetas.
 También investigué cómo funciona Expo y qué hacen ThemedText y ThemedView que venian ya por defecto cuando hice el proyecto de expo en mi pc.
+
+
+Cree un .aab, que al parecer es solo para subir a tiendas como Play Store, y luego cree la apk y la instale en el emulador y en mi celu.
+Utilice expo y adb.

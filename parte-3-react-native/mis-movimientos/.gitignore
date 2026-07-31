@@ -9,6 +9,10 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Editor directories
+.idea/
+.vscode/
+
 # Native
 .kotlin/
 *.orig.*
