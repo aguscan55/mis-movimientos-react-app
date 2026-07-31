@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { ThemedText } from './themed-text'
 import type { Movement } from '@/data/movements'
+import { ArrowDown, ArrowUp } from 'lucide-react-native'
 
 type Props = {
   movement: Movement
@@ -19,7 +20,11 @@ export default function MovementItem({ movement }: Props) {
   return (
     <View style={styles.container}>
       <View style={[styles.iconBox, isIncome ? styles.iconIncome : styles.iconExpense]}>
-        <Text style={styles.iconText}>{isIncome ? '↓' : '↑'}</Text>
+        <Text style={styles.iconText}>{isIncome ? (
+          <ArrowDown size={20} color="#ffffff" />
+        ) : (
+          <ArrowUp size={20} color="#ffffff" />
+        )}</Text>
       </View>
 
       <View style={styles.details}>

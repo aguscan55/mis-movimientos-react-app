@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Pressable, StyleSheet, Text, FlatList, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Eye, EyeOff } from 'lucide-react-native'
 
 import MovementItem from '@/components/movement-item'
 import { movements } from '@/data/movements'
@@ -41,7 +42,14 @@ export default function HomeScreen() {
             </ThemedText>
           </ThemedView>
           <Pressable style={styles.balanceButton} onPress={() => setShowBalance((prev) => !prev)}>
-            <Text style={styles.balanceButtonText}>{showBalance ? 'Ocultar saldo' : 'Mostrar saldo'}</Text>
+            {showBalance ? (
+              <EyeOff size={18} color="#111827" />
+            ) : (
+              <Eye size={18} color="#111827" />
+            )}
+            <Text style={styles.balanceButtonText}>
+              {showBalance ? 'Ocultar saldo' : 'Mostrar saldo'}
+            </Text>
           </Pressable>
         </ThemedView>
 
@@ -147,6 +155,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: '#F3F4F6',
     alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   balanceButtonText: {
     color: '#111827',
