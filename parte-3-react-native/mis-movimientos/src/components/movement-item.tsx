@@ -1,94 +1,79 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { ThemedText } from './themed-text'
-import type { Movement } from '@/data/movements'
-import { ArrowDown, ArrowUp } from 'lucide-react-native'
+﻿import { StyleSheet, View } from 'react-native';
+import { ArrowDown, ArrowUp } from 'lucide-react-native';
+import { ThemedText } from './themed-text';
+import { ThemedView } from './themed-view';
+import { Movement } from '@/data/movements';
+import { Spacing } from '@/constants/theme';
 
-type Props = {
-  movement: Movement
-}
+type MovementItemProps = {
+  movement: Movement;
+};
 
-const formatDate = (timestamp: number) =>
-  new Date(timestamp).toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
-
-export default function MovementItem({ movement }: Props) {
-  const isIncome = movement.type === 'income'
+export default function MovementItem({ movement }: MovementItemProps) {
+  const isIncome = movement.type === 'income';
+  const amountColor = isIncome ? '#16A34A' : '#DC2626';
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.iconBox, isIncome ? styles.iconIncome : styles.iconExpense]}>
-        <Text style={styles.iconText}>{isIncome ? (
-          <ArrowDown size={20} color="#ffffff" />
-        ) : (
-          <ArrowUp size={20} color="#ffffff" />
-        )}</Text>
+    <ThemedView type="backgroundElement" style={styles.card}>
+      <View style={styles.left}>
+        <View style={[styles.badge, { backgroundColor: isIncome ? '#DCFCE7' : '#FEE2E2' }]}> 
+          {isIncome ? <ArrowUp size={18} color="#16A34A" /> : <ArrowDown size={18} color="#DC2626" />}
+        </View>
+        <View style={styles.info}>
+          <ThemedText type="small" themeColor="textSecondary">
+            {new Date(movement.date).toLocaleDateString('es-AR', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </ThemedText>
+        </View>
       </View>
-
-      <View style={styles.details}>
-        <ThemedText style={styles.title}>{movement.title}</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.date}>
-          {formatDate(movement.date)}
-        </ThemedText>
-      </View>
-
-      <ThemedText style={[styles.amount, isIncome ? styles.amountIncome : styles.amountExpense]}>
-        {isIncome ? '+' : '-'} ${movement.amount.toLocaleString('es-AR')}
+      <ThemedText type="smallBold" style={[styles.amount, { color: amountColor }]}> 
+        {isIncome ? '+' : '-'}${movement.amount.toLocaleString('es-AR')}
       </ThemedText>
-    </View>
-  )
+    </ThemedView>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
+    width: '100%',
+    borderRadius: 16,
+    padding: Spacing.four,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 3,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
-  iconBox: {
-    width: 42,
-    height: 42,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconIncome: {
-    backgroundColor: '#22C55E',
-  },
-  iconExpense: {
-    backgroundColor: '#EF4444',
-  },
-  iconText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  details: {
+  info: {
     flex: 1,
-    marginLeft: 16,
+    marginRight: Spacing.four,
   },
   title: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  date: {
-    marginTop: 4,
-    fontSize: 13,
-    color: '#6B7280',
+    marginBottom: 4,
   },
   amount: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
   },
-  amountIncome: {
-    color: '#22C55E',
+  left: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: Spacing.four,
   },
-  amountExpense: {
-    color: '#EF4444',
+  badge: {
+    width: 40,
+    height: 40,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: Spacing.three,
   },
-})
+});

@@ -91,11 +91,12 @@ export default function HomeScreen() {
 
         <ThemedView style={styles.movementsList}>
           <FlatList
+            style={styles.movementsScroll}
             data={filteredMovements}
             keyExtractor={(item) => String(item.id)}
             renderItem={({ item }) => <MovementItem movement={item} />}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            contentContainerStyle={{ paddingBottom: 24 }}
+            contentContainerStyle={{ paddingBottom: BottomTabInset + Spacing.four }}
           />
         </ThemedView>
       </SafeAreaView>
@@ -205,5 +206,9 @@ const styles = StyleSheet.create({
   },
   movementsList: {
     width: '100%',
+    flex: 1,
+  },
+  movementsScroll: {
+    flex: 1,
   },
 });
