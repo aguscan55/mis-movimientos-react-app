@@ -70,3 +70,13 @@ También investigué cómo funciona Expo y qué hacen ThemedText y ThemedView qu
 
 Cree un .aab, que al parecer es solo para subir a tiendas como Play Store, y luego cree la apk y la instale en el emulador y en mi celu.
 Utilice expo y adb.
+
+
+
+------------ commit 5/8/2026 ------------
+
+Agregué una navigation bar, las demás pestañas están como placeholders, salvo la de las tarjetas. La layout está basada en la app de claro pay.
+El usuario puede agregar su tarjeta y guardarla. 
+Hice esto para practicar Routing, que es lo que estoy viendo en el curso.
+Además para utilizar formularios.
+TODO: la validación de los datos ingresados por el usuario no es clara y falta mostrar visualmente cual es el error del usuario a la hora de llenar el formulario de las tarjetas.
