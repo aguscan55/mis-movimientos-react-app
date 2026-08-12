@@ -80,3 +80,4 @@ El usuario puede agregar su tarjeta y guardarla.
 Hice esto para practicar Routing, que es lo que estoy viendo en el curso.
 Además para utilizar formularios.
 TODO: la validación de los datos ingresados por el usuario no es clara y falta mostrar visualmente cual es el error del usuario a la hora de llenar el formulario de las tarjetas.
+
