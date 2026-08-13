@@ -1,6 +1,59 @@
 # mis-movimientos-react-app
 Mockup practica para HTML + CSS, React y React Native.
 
+
+
+
+# Mis Movimientos - Billetera Virtual (React Native)
+
+Aplicación móvil tipo billetera virtual desarrollada en React Native y Expo Router, inspirada en las interfaces financieras actuales (ej: Claro Pay). Permite visualizar saldo, historial de movimientos y gestionar tarjetas vinculadas.
+
+## Tecnologías y Dependencias
+- **Framework:** React Native + Expo (SDK 51+)
+- **Enrutamiento:** Expo Router
+- **Iconografía:** `lucide-react-native`
+- **Gestión de estado:** React Hooks (`useState`, Context API)
+- **Estilos:** `StyleSheet` nativo de React Native
+
+## Requisitos Previos
+Para levantar este proyecto de manera local vas a necesitar:
+1. [Node.js](https://nodejs.org/) (v18 o superior)
+2. Gestor de paquetes: `npm`
+3. Dispositivo móvil físico con Android o Emulador configurado en Android Studio.
+4. ADB (Android Debug Bridge) configurado en las variables de entorno de tu PC.
+
+---
+
+##  Instalación y Arranque del Proyecto
+
+1. **Clonar el repositorio y acceder a la carpeta:**
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd mis-movimientos-react-app/parte-3-react-native/mis-movimientos
+
+2. **Instalar dependencias**
+        npm install
+
+Opción A: Correr el emulador en Android Studio:
+        1) Abrí Android Studio e iniciá tu emulador desde el Device Manager.
+        2) Ejecutá en la terminal: npx expo start, luego presioná a. Se va a abrir automaticamente en el emulador.
+
+Opción B: Correr en dispositivo físico vía ADB (Inalámbrico / Wi-Fi)
+        Si querés probar la app de forma nativa en tu teléfono sin usar cables, seguí estos pasos (requiere que PC y teléfono estén en la misma red Wi-Fi):
+
+        1) En tu teléfono Android, activá las Opciones de Desarrollador y encendé la Depuración Inalámbrica.
+
+        2) Entrá a "Vincular dispositivo con código de vinculación". Te dará un código de 6 dígitos, una IP y un puerto (Ej: 192.168.1.X:11111).
+
+        3) En la terminal de tu PC, emparejá el dispositivo:
+        adb pair 192.168.1.X:11111
+        (Ingresá el código de 6 dígitos cuando la terminal lo solicite)
+        4) Volvé a la pantalla anterior en tu teléfono para ver el puerto de conexión definitivo (Ej: 192.168.1.X:22222). Conectate: adb connect 192.168.1.X:22222.
+        5) Levantá el servidor de Expo (limpiando la caché por seguridad):
+        npx expo start -c
+        6) Presioná la tecla a para instalar y abrir la app en tu teléfono.
+        
+
 Para la parte 1 utilicé HTML y CSS. En CSS utilicé flexbox para lograr que los elementos queden espaciados como quería, intentando simular la imagen de referencia. También definí variables en :root con el padding, radio y colores detallados en la imagen. HTML/CSS usan etiquetas y clases, la diferencia con React es que usa JSX y estados.
 Además me va a permitir separar la UI en componentes reutilizables.
 
