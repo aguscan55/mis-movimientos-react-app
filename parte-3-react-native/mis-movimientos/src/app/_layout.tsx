@@ -2,8 +2,15 @@
 import { Platform, useColorScheme } from 'react-native';
 import { Home, List, CreditCard, User } from 'lucide-react-native';
 import { CardsProvider } from '@/components/cards-context';
+import StorybookUIRoot from '../../.rnstorybook';
+
+
+const SHOW_STORYBOOK = false;
 
 export default function RootLayout() {
+  if (SHOW_STORYBOOK) {
+    return <StorybookUIRoot />;
+  }
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const bottomPadding = Platform.OS === 'android' ? 30 : 10;

@@ -1,6 +1,20 @@
 # Changelog
 
 Todas las modificaciones de este proyecto se documentarán en este archivo.
+### - 2026-08-17
+
+### Agregado (Added)
+- **Storybook para React Native:** Configuración e integración completa del entorno de desarrollo de UI aislado.
+  - Creación de catálogo interactivo para visualizar y probar componentes sin depender de la lógica de navegación o el estado global.
+  - Implementación de historias (Stories) para `MovementItem`, simulando distintos flujos de entrada de datos (estado de ingreso y egreso).
+  - Implementación de historias para `ProfileMenuItem`, validando las variantes de UI (modo normal y modo destructivo).
+  - Integración de variables de entorno (`EXPO_PUBLIC_STORYBOOK`) en el _layout_ principal para habilitar o deshabilitar el catálogo de forma segura, evitando su exposición en compilaciones de producción.
+- **Entorno de Pruebas E2E:** Setup inicial de Cypress configurado para testear la versión compilada en Expo Web.
+  - Configuración del motor para ejecución *Headless* (sin interfaz gráfica) y creación de la estructura base de directorios.
+  - Desarrollo del primer caso de prueba de integración (`inicio.cy.js`) para validar la renderización del enrutador y la presencia de la navegación principal.
+
+### Problemas Conocidos (Known Issues)
+- **Bloqueo en Ejecución Local de Cypress:** Actualmente, al intentar inicializar el motor de Cypress a nivel local, el proceso finaliza de manera prematura arrojando el código de error de salida `2147483651`. Se realizó un diagnóstico avanzado (Debug CLI) y se identificó que las políticas de seguridad locales (AppLocker / Antivirus corporativo) están bloqueando la ejecución del archivo `.exe` interno de Cypress alojado en el directorio temporal `AppData`. La configuración del código de pruebas está finalizada y es funcional, pero se requerirá solicitar excepciones al equipo de Infraestructura para habilitar su ejecución física en las máquinas del equipo.
 
 ## [1.2.0] - 2026-08-13
 ### Agregado

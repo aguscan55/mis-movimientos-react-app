@@ -1,9 +1,6 @@
 # mis-movimientos-react-app
 Mockup practica para HTML + CSS, React y React Native.
 
-
-
-
 # Mis Movimientos - Billetera Virtual (React Native)
 
 Aplicación móvil tipo billetera virtual desarrollada en React Native y Expo Router, inspirada en las interfaces financieras actuales (ej: Claro Pay). Permite visualizar saldo, historial de movimientos y gestionar tarjetas vinculadas.
