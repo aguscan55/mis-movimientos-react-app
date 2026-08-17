@@ -1,7 +1,8 @@
 # Changelog
 
 Todas las modificaciones de este proyecto se documentarán en este archivo.
-### - 2026-08-17
+
+## [1.3.0] - 2026-08-17
 
 ### Agregado (Added)
 - **Storybook para React Native:** Configuración e integración completa del entorno de desarrollo de UI aislado.
