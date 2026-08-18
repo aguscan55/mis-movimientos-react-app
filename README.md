@@ -7,6 +7,7 @@ Aplicación móvil tipo billetera virtual desarrollada en React Native y Expo Ro
 - **Enrutamiento:** Expo Router
 - **Iconografía:** `lucide-react-native`
 - **Gestión de estado:** React Hooks (`useState`, Context API)
+- **Formularios:** `react-native-mask-input` (Manejo de máscaras UX)
 - **Estilos:** `StyleSheet` nativo de React Native
 
 ## Requisitos Previos
@@ -117,7 +118,7 @@ Utilice expo y adb.
 
 ---
 
-## 🧪 Pruebas End-to-End (E2E)
+##  Pruebas End-to-End (E2E)
 
 **Decisión de Arquitectura:**
 Para la implementación de pruebas E2E en este proyecto, se determinó utilizar **Cypress** atacando la versión Web compilada de React Native (vía Expo Web). 

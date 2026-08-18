@@ -2,6 +2,18 @@
 
 Todas las modificaciones de este proyecto se documentarán en este archivo.
 
+## [1.4.0] - 2026-08-18
+
+### Agregado (Added)
+- **Campo CVV:** Incorporación del código de seguridad en el formulario de alta de tarjetas con ocultamiento automático (`secureTextEntry`).
+- **Validaciones Estrictas:** Lógica de validación robusta para habilitar el botón de guardado (16 dígitos exactos para la tarjeta, 4 para fecha de vencimiento y longitud dinámica para CVV).
+
+### Modificado (Changed)
+- **UX/UI Formulario de Tarjetas:** Refactorización integral de la pantalla `NewCardScreen`.
+- Integración de la librería `react-native-mask-input` para formateo visual automático (espaciado de tarjeta y barra de fecha) mejorando la experiencia de usuario.
+- Optimización del espacio en pantalla agilizando la carga al colocar "Vencimiento" y "CVV" en la misma fila mediante Flexbox.
+
+
 ## [1.3.0] - 2026-08-17
 
 ### Agregado (Added)
