@@ -9,6 +9,7 @@ Aplicación móvil tipo billetera virtual desarrollada en React Native y Expo Ro
 - **Gestión de estado:** React Hooks (`useState`, Context API)
 - **Formularios:** `react-native-mask-input` (Manejo de máscaras UX)
 - **Estilos:** `StyleSheet` nativo de React Native
+- **Testing E2E:** Maestro (Pruebas nativas vía ADB)
 
 ## Requisitos Previos
 Para levantar este proyecto de manera local vas a necesitar:
@@ -117,9 +118,3 @@ Cree un `.aab`, que al parecer es solo para subir a tiendas como Play Store, y l
 Utilice expo y adb.
 
 ---
-
-##  Pruebas End-to-End (E2E)
-
-**Decisión de Arquitectura:**
-Para la implementación de pruebas E2E en este proyecto, se determinó utilizar **Cypress** atacando la versión Web compilada de React Native (vía Expo Web). 
-Al estar operando en un entorno de desarrollo basado en Windows, configurar herramientas de testing móvil nativo (como Detox) introduce dependencias complejas de SO y problemas de rendimiento con emuladores locales que ralentizan el ciclo de desarrollo. Al testear la versión web de Expo con Cypress, garantizamos la validación total de la lógica de negocio, el enrutamiento (Expo Router) y el estado de la UI de manera ágil, confiable y agnóstica a la plataforma física.
