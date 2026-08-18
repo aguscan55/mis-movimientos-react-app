@@ -50,6 +50,29 @@ Si querés probar la app de forma nativa en tu teléfono sin usar cables, seguí
    `npx expo start -c`
 6. Presioná la tecla `a` para instalar y abrir la app en tu teléfono.
 
+## Pruebas E2E (Maestro)
+
+Para las pruebas End-to-End utilizamos Maestro (https://maestro.mobile.dev/). Al ser una herramienta que interactúa directamente con el sistema operativo del dispositivo móvil vía ADB, no se instala por npm, sino como un binario global en tu sistema.
+
+### Instalación de Maestro
+En tu terminal (en Windows usar Git Bash o WSL), ejecutá el siguiente comando:
+
+curl -Ls "https://get.maestro.mobile.dev" | bash
+
+(Es posible que debas reiniciar tu terminal luego de la instalación para que reconozca el comando maestro).
+
+### ¿Cómo correr los tests?
+1. Asegurate de tener tu emulador Android encendido o tu dispositivo físico conectado.
+2. Iniciá la aplicación localmente y dejala abierta en la pantalla de tu dispositivo:
+
+npx expo start -c
+
+(Presioná 'a' para abrirla en Android).
+
+3. En otra terminal, ejecutá el script de npm para lanzar la suite de pruebas:
+
+npm run test:e2e 
+(o moverse a la carpeta .maestro y correr: maestro test .maestro/inicio.yaml en git bash)
 ---
 
 Para la parte 1 utilicé HTML y CSS. En CSS utilicé flexbox para lograr que los elementos queden espaciados como quería, intentando simular la imagen de referencia. También definí variables en `:root` con el padding, radio y colores detallados en la imagen. HTML/CSS usan etiquetas y clases, la diferencia con React es que usa JSX y estados.

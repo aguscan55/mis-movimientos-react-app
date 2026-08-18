@@ -53,7 +53,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "storybook:ios": "cross-env STORYBOOK_ENABLED=true expo start --ios",
-    "storybook:android": "cross-env STORYBOOK_ENABLED=true expo start --android"
+    "storybook:android": "cross-env STORYBOOK_ENABLED=true expo start --android",
+    "test:e2e": "maestro test .maestro/inicio.yaml"
   },
   "private": true
 }
