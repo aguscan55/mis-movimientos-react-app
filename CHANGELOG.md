@@ -2,6 +2,16 @@
 
 Todas las modificaciones de este proyecto se documentarán en este archivo.
 
+
+## [1.5.0] - 2026-08-18
+
+### Agregado
+- Integración de `Maestro` para pruebas automatizadas End-to-End (E2E) nativas.
+- Primer flujo de prueba E2E (`.maestro/inicio.yaml`) para validar la navegación entre "Inicio" y "Tarjetas".
+
+### Eliminado
+- Dependencia y archivos de configuración de Cypress (bloqueado por políticas de entorno corporativo).
+
 ## [1.4.0] - 2026-08-18
 
 ### Agregado (Added)

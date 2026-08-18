@@ -1,0 +1,5 @@
+appId: host.exp.exponent
+---
+- assertVisible: "Mis movimientos"
+- tapOn: "Tarjetas"
+- assertVisible: "Agregar tarjeta"
