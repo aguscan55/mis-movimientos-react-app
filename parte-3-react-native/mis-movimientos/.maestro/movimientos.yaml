@@ -1,0 +1,18 @@
+appId: host.exp.exponent
+---
+- tapOn: "Movimientos"
+- assertVisible: "Historial de tus ingresos y gastos"
+
+- assertVisible: "Balance total"
+- assertVisible: "Transferencia recibida"
+- assertVisible: "Pago en supermercado"
+
+- tapOn: "Ingresos"
+- assertVisible: "Total de ingresos"
+- assertVisible: "Transferencia recibida"
+- assertNotVisible: "Pago en supermercado"
+
+- tapOn: "Egresos"
+- assertVisible: "Total de egresos"
+- assertVisible: "Recarga celular"
+- assertNotVisible: "Transferencia recibida" 
