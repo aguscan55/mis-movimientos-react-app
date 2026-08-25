@@ -1,0 +1,20 @@
+appId: host.exp.exponent
+---
+# 1. Asegurarnos de estar en la pestaña de Inicio
+- tapOn: "Inicio"
+- assertVisible: "Saldo disponible"
+
+# 2. El saldo debe estar visible por defecto
+- assertVisible: "Ocultar saldo"
+- assertNotVisible: "••••••"
+
+# 3. Tocamos para ocultar
+- tapOn: "Ocultar saldo"
+
+# 4. Validamos que se ocultó el monto
+- assertVisible: "••••••"
+- assertVisible: "Mostrar saldo"
+
+# 5. Volvemos a mostrar
+- tapOn: "Mostrar saldo"
+- assertNotVisible: "••••••"
