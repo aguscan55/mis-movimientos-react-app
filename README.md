@@ -73,6 +73,10 @@ npx expo start -c
 
 npm run test:e2e 
 (o moverse a la carpeta .maestro y correr: maestro test .maestro/inicio.yaml en git bash)
+### Características Principales
+- **Historial de Movimientos:** Lista optimizada con cálculo de balance dinámico y filtrado por tipo de transacción (Ingresos/Egresos).
+- **Perfil de usuario**
+- **Tarjetas:** Se permite al usuario agregar una tarjeta para utilizar en las compras o inversiones futuras.
 ---
 
 Para la parte 1 utilicé HTML y CSS. En CSS utilicé flexbox para lograr que los elementos queden espaciados como quería, intentando simular la imagen de referencia. También definí variables en `:root` con el padding, radio y colores detallados en la imagen. HTML/CSS usan etiquetas y clases, la diferencia con React es que usa JSX y estados.

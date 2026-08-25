@@ -3,6 +3,22 @@
 Todas las modificaciones de este proyecto se documentarán en este archivo.
 
 
+## - 2026-08-24
+
+Sistema de estilos centralizado: Se unificó la paleta de colores y se crearon estilos globales (tarjetas, botones) aplicados en todas las pantallas. Esto garantiza consistencia visual y facilita futuros cambios de diseño.
+
+Navegación modularizada: Se limpió el componente principal de rutas (Tabs), extrayendo toda la configuración de estilos y plataforma a un archivo dedicado, mejorando la legibilidad y el mantenimiento del código.
+
+Limpieza general de UI: Se eliminó código duplicado en las pantallas de Inicio, Perfil, Tarjetas y Movimientos, adoptando una nueva arquitectura de diseño global.
+
+## - 2026-08-19
+
+### Agregado
+- Nueva pantalla de `Movimientos` implementada con `FlatList` para renderizado optimizado.
+- Filtros interactivos por tipo de transacción (Todos, Ingresos, Egresos).
+- Componente de resumen dinámico (`useMemo`) que calcula el balance y se recalcula reactivamente según el filtro activo.
+- Flujo de prueba E2E en Maestro (`movimientos.yaml`) para validar la navegación y la lógica de renderizado condicional de los filtros.
+
 ## [1.5.0] - 2026-08-18
 
 ### Agregado
