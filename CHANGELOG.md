@@ -3,6 +3,28 @@
 Todas las modificaciones de este proyecto se documentarán en este archivo.
 
 
+## - 2026-08-27
+
+### Agregado
+
+Servidor backend inicial utilizando Node.js y Express.
+
+Pool de conexión a la base de datos MySQL mediante la librería mysql2.
+
+Endpoints REST (GET y POST) para la gestión de /api/movements.
+
+Configuración de variables de entorno (.env) para proteger las credenciales de la base de datos.
+
+### Cambiado
+
+Pantalla HomeScreen: Reemplazo del array estático de movimientos por un consumo asíncrono a la API real utilizando fetch y useEffect.
+
+Lógica de useMemo en HomeScreen actualizada para reaccionar dinámicamente a los datos provenientes del backend.
+
+### Arreglado
+
+Manejo del estado de carga en la interfaz implementando ActivityIndicator para evitar saltos visuales durante la petición de red.
+
 ## - 2026-08-24
 
 Sistema de estilos centralizado: Se unificó la paleta de colores y se crearon estilos globales (tarjetas, botones) aplicados en todas las pantallas. Esto garantiza consistencia visual y facilita futuros cambios de diseño.
