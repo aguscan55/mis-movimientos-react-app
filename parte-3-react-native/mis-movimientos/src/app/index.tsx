@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Pressable, StyleSheet, Text, FlatList, View } from 'react-native'
+import { useState, useMemo, useEffect } from 'react'
+import { Pressable, StyleSheet, Text, FlatList, View, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Eye, EyeOff } from 'lucide-react-native'
 
@@ -8,20 +8,40 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import Header from '@/components/Header'
 import { BottomTabInset, MaxContentWidth, Spacing, GlobalStyles, Colors } from '@/constants/theme'
-import { movements } from '@/data/movements'
+
+const API_URL = 'http://localhost:3000/api/movements';
 
 export default function HomeScreen() {
   const [showBalance, setShowBalance] = useState(true)
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all')
+  
+  const [movements, setMovements] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchMovements = async () => {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        setMovements(data);
+      } catch (error) {
+        console.error('Error cargando movimientos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMovements();
+  }, []);
 
   const filteredMovements = useMemo(() =>
     filter === 'all' ? movements : movements.filter((m) => m.type === filter),
-    [filter]
+    [filter, movements] // Añadimos movements a las dependencias
   )
 
   const balance = useMemo(() =>
-    movements.reduce((sum, m) => sum + (m.type === 'income' ? m.amount : -m.amount), 0),
-    []
+    movements.reduce((sum, m) => sum + (m.type === 'income' ? Number(m.amount) : -Number(m.amount)), 0),
+    [movements]
   )
 
   return (
@@ -78,14 +98,19 @@ export default function HomeScreen() {
         </ThemedView>
 
         <ThemedView style={styles.movementsList}>
-          <FlatList
-            style={styles.movementsScroll}
-            data={filteredMovements}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => <MovementItem movement={item} />}
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            contentContainerStyle={{ paddingBottom: BottomTabInset + Spacing.four }}
-          />
+          {/* 3. Validamos si está cargando para mostrar el spinner */}
+          {isLoading ? (
+            <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 50 }} />
+          ) : (
+            <FlatList
+              style={styles.movementsScroll}
+              data={filteredMovements}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => <MovementItem movement={item} />}
+              ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+              contentContainerStyle={{ paddingBottom: BottomTabInset + Spacing.four }}
+            />
+          )}
         </ThemedView>
       </SafeAreaView>
     </ThemedView>
