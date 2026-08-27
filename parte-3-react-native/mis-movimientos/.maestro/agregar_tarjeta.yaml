@@ -8,7 +8,7 @@ appId: host.exp.exponent
 - assertVisible: "Titular de la tarjeta"
 
 - tapOn: "Ej: Juan Perez"
-- inputText: "Agustin Canteros"
+- inputText: "Agus Canteros"
 - hideKeyboard
 
 - tapOn: "0000 0000 0000 0000"
@@ -25,7 +25,7 @@ appId: host.exp.exponent
 
 - tapOn: "Vincular Tarjeta"
 
-- assertVisible: "Agustin Canteros"
-- assertVisible: "Vence 12/29"
+- assertVisible: "Agus Canteros"
+- assertVisible: "Vence 1229"
 # Maestro usa Regex por defecto, esto busca los últimos 4 dígitos:
 - assertVisible: ".*5678"
