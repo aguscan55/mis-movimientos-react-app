@@ -4,8 +4,12 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import ProfileMenuItem from '@/components/profile-menu-item'
 import { Spacing, GlobalStyles, Colors } from '@/constants/theme'
+import { useAuth } from '@/context/auth-context'
 
 export default function ProfileScreen() {
+  const { user, logout } = useAuth()
+  const initials = user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <ThemedText type="title" style={styles.pageTitle}>Mi Perfil</ThemedText>
@@ -13,11 +17,11 @@ export default function ProfileScreen() {
       {/* COMBINAMOS LA CARD GLOBAL CON LOS ESTILOS LOCALES */}
       <ThemedView style={[GlobalStyles.card, styles.userCardLayout]}>
         <View style={styles.avatar}>
-          <ThemedText style={styles.avatarText}>AC</ThemedText>
+          <ThemedText style={styles.avatarText}>{initials}</ThemedText>
         </View>
         <View style={styles.userInfo}>
-          <ThemedText type="smallBold" style={styles.userName}>Agustín Canteros</ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">agustin.canteros@ejemplo.com</ThemedText>
+          <ThemedText type="smallBold" style={styles.userName}>{user?.name || 'Usuario'}</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary">{user?.email || 'email@ejemplo.com'}</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">+54 11 1234-5678</ThemedText>
         </View>
       </ThemedView>
@@ -31,7 +35,7 @@ export default function ProfileScreen() {
 
       {/* USAMOS LA CARD GLOBAL DIRECTAMENTE */}
       <View style={[GlobalStyles.card, { paddingHorizontal: Spacing.four, padding: 0 }]}>
-        <ProfileMenuItem icon={<LogOut size={20} color={Colors.danger} />} title="Cerrar sesión" onPress={() => {}} isDestructive />
+        <ProfileMenuItem icon={<LogOut size={20} color={Colors.danger} />} title="Cerrar sesión" onPress={logout} isDestructive />
       </View>
     </ScrollView>
   )

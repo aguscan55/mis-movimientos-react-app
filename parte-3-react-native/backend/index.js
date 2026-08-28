@@ -1,10 +1,12 @@
-require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const mysql = require('mysql2/promise');
+const cors = require('cors');
+const bcrypt = require('bcrypt'); // Para encriptar contraseñas
+const jwt = require('jsonwebtoken'); // Para generar tokens
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -14,35 +16,112 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
-// 2. Endpoint GET: Leer desde la tabla 'movements'
-app.get('/api/movements', async (req, res) => {
+// ==========================================
+// RUTAS DE AUTENTICACIÓN
+// ==========================================
+
+// Endpoint: Registro de usuario
+app.post('/api/register', async (req, res) => {
+  const { name, email, password } = req.body;
+  
   try {
-    const [rows] = await pool.query('SELECT * FROM movements');
-    res.json(rows);
+    // 1. Verificar si el email ya existe
+    const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: 'El email ya está registrado' });
+    }
+
+    // 2. Encriptar contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 3. Insertar en la BD
+    const [result] = await pool.query(
+      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      [name, email, hashedPassword]
+    );
+
+    // 4. Generar token
+    const token = jwt.sign(
+      { id: result.insertId, email }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '7d' } // El token durará 7 días
+    );
+
+    res.status(201).json({
+      message: 'Usuario creado exitosamente',
+      token,
+      user: { id: result.insertId, name, email }
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener los movimientos de la base de datos' });
+    res.status(500).json({ error: 'Error en el servidor al registrar usuario' });
   }
 });
 
-// 3. Endpoint POST: Insertar en la tabla 'movements'
+// Endpoint: Inicio de sesión
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  try {
+    // 1. Buscar al usuario
+    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    const user = users[0];
+
+    // 2. Comparar la contraseña enviada con la encriptada
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    // 3. Generar token
+    const token = jwt.sign(
+      { id: user.id, email: user.email }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      message: 'Login exitoso',
+      token,
+      user: { id: user.id, name: user.name, email: user.email }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error en el servidor al iniciar sesión' });
+  }
+});
+
+
+// ==========================================
+// RUTAS DE MOVIMIENTOS
+// ==========================================
+
+app.get('/api/movements', async (req, res) => {
+  try {
+    // Mejoramos esto agregando ORDER BY date DESC
+    const [rows] = await pool.query('SELECT * FROM movements ORDER BY date DESC');
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener movimientos' });
+  }
+});
+
 app.post('/api/movements', async (req, res) => {
-  // 1. Agregamos 'date' a la extracción de datos
   const { title, date, amount, type } = req.body;
   
   try {
-    // 2. Agregamos 'date' a las columnas y un signo de interrogación (?) extra
     const [result] = await pool.query(
       'INSERT INTO movements (title, date, amount, type) VALUES (?, ?, ?, ?)',
       [title, date, amount, type]
     );
     
-    // Devolvemos el objeto completo
     res.status(201).json({ 
       id: result.insertId, 
       title, 
@@ -55,6 +134,7 @@ app.post('/api/movements', async (req, res) => {
     res.status(500).json({ error: 'Error al guardar el movimiento' });
   }
 });
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+
+app.listen(port, () => {
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
