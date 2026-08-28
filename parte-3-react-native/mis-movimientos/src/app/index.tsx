@@ -36,7 +36,7 @@ export default function HomeScreen() {
 
   const filteredMovements = useMemo(() =>
     filter === 'all' ? movements : movements.filter((m) => m.type === filter),
-    [filter, movements] // Añadimos movements a las dependencias
+    [filter, movements]
   )
 
   const balance = useMemo(() =>

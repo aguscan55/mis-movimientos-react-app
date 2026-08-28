@@ -106,10 +106,19 @@ Además, me costó la lógica de mostrar/ocultar el saldo con `useState`.
 - Encontré una biblioteca para testing: `@testing-library/react-native`, pero no llegué a utilizarla. Agregaría tests luego de tener algunas otras funcionalidades.
 - No agregué casi nada de accesibilidad, asi que tambien es un punto a mejorar.
 
-Para correr el proyecto hace faltar instalar node.js y npm. Luego correr `npm start` sobre la carpeta `parte-3-react-native/mis-movimientos`.
+Para correr el proyecto hace faltar instalar node.js y npm. Luego correr `npm start` sobre la carpeta `parte-3-react-native/mis-movimientos`. Tambien `npm run dev` en la carpeta backend.
 
 Los componentes que cree fueron: `src/components/Header.tsx`, `src/components/movement-item.tsx`. Luego otro archivo que modifiqué fue `src/app/index.tsx`.
 
+
+-------- Backend ---------
+##  Instalación de Dependencias
+
+### Backend
+Entrar a la carpeta `backend` e instalar los módulos necesarios:
+```bash
+cd backend
+npm install
 ---
 
 ## Preguntas
