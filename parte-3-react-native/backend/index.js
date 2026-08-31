@@ -134,6 +134,40 @@ app.post('/api/movements', async (req, res) => {
     res.status(500).json({ error: 'Error al guardar el movimiento' });
   }
 });
+// ==========================================
+// RUTAS DE TARJETAS
+// ==========================================
+
+app.get('/api/cards', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM cards ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener tarjetas' });
+  }
+});
+
+app.post('/api/cards', async (req, res) => {
+  const { holder, number, expiry } = req.body;
+  
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO cards (holder, number, expiry) VALUES (?, ?, ?)',
+      [holder, number, expiry]
+    );
+    
+    res.status(201).json({ 
+      id: result.insertId, 
+      holder, 
+      number, 
+      expiry 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al guardar la tarjeta' });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
