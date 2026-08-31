@@ -1,7 +1,7 @@
-﻿import { useEffect } from 'react';
-import { DarkTheme, DefaultTheme, ThemeProvider, Tabs, useRouter, useSegments } from 'expo-router';
+﻿import { DarkTheme, DefaultTheme, ThemeProvider, Tabs, Redirect, useSegments } from 'expo-router';
 import { Platform, useColorScheme } from 'react-native';
 import { Home, List, CreditCard, User } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CardsProvider } from '@/components/cards-context';
 import { AuthProvider, useAuth } from '@/context/auth-context';
@@ -10,19 +10,20 @@ import StorybookUIRoot from '../../.rnstorybook';
 const SHOW_STORYBOOK = false;
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const segments = useSegments();
-  const router = useRouter();
 
-  useEffect(() => {
-    const inAuthScreen = segments[0] === 'login' || segments[0] === 'register';
+  if (isLoading) return null; 
 
-    if (!user && !inAuthScreen) {
-      router.replace('/login');
-    } else if (user && inAuthScreen) {
-      router.replace('/');
-    }
-  }, [user, segments]);
+  const inAuthScreen = segments[0] === 'login' || segments[0] === 'register';
+
+  if (!user && !inAuthScreen) {
+    return <Redirect href="/login" />;
+  }
+
+  if (user && inAuthScreen) {
+    return <Redirect href="/" />;
+  }
 
   return <>{children}</>;
 }
@@ -34,16 +35,15 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  const bottomPadding = Platform.OS === 'android' ? 30 : 10;
-  const tabHeight = Platform.OS === 'android' ? 86 : 64;
+  const insets = useSafeAreaInsets();
+  
+  const bottomPadding = Platform.OS === 'android' ? Math.max(insets.bottom, 12) : 10;
+  const tabHeight = Platform.OS === 'android' ? 56 + bottomPadding : 64;
 
   return (
     <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-      {/* AuthProvider envuelve todo para saber si hay usuario */}
       <AuthProvider>
-        {/* CardsProvider sigue funcionando intacto */}
         <CardsProvider>
-          {/* AuthGuard vigila y redirige antes de mostrar las pantallas */}
           <AuthGuard>
             <Tabs
               screenOptions={{
@@ -67,8 +67,6 @@ export default function RootLayout() {
                   paddingBottom: 2,
                 },
               }}>
-              
-              {/* TUS PESTAÑAS NORMALES */}
               <Tabs.Screen
                 name="index"
                 options={{
@@ -97,13 +95,11 @@ export default function RootLayout() {
                   tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
                 }}
               />
-
-              {/* RUTAS DE AUTENTICACIÓN (Ocultas del menú inferior) */}
               <Tabs.Screen 
                 name="login" 
                 options={{ 
-                  href: null, // Oculta el botón de la barra
-                  tabBarStyle: { display: 'none' } // Desaparece la barra completa
+                  href: null,
+                  tabBarStyle: { display: 'none' }
                 }} 
               />
               <Tabs.Screen 
