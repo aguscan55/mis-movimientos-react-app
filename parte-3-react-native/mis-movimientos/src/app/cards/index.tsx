@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -7,7 +7,7 @@ import { Spacing, GlobalStyles, Colors } from '@/constants/theme';
 
 export default function CardsScreen() {
   const router = useRouter();
-  const { cards } = useCards();
+  const { cards, isLoading } = useCards();
 
   const goToNewCard = () => {
     router.push('/cards/new');
@@ -17,7 +17,9 @@ export default function CardsScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <ThemedText type="title" style={styles.title}>Tarjetas</ThemedText>
 
-      {cards.length === 0 ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 50 }} />
+      ) : cards.length === 0 ? (
         <ThemedView type="surfaceMuted" style={styles.emptyBox}>
           <ThemedText type="smallBold">No tienes tarjetas asignadas a tu cuenta.</ThemedText>
           <Pressable

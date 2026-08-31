@@ -1,9 +1,12 @@
-import { useState, useMemo } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { useState, useMemo, useEffect } from 'react';
+import { FlatList, Pressable, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors, GlobalStyles, Spacing } from '@/constants/theme';
-import { movements, Movement, FilterType } from '@/data/movements';
+import { Colors, GlobalStyles } from '@/constants/theme';
+
+const API_URL = 'http://localhost:3000/api/movements';
+
+type FilterType = 'all' | 'income' | 'expense';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('es-AR', {
@@ -13,8 +16,9 @@ const formatCurrency = (amount: number) => {
   }).format(amount);
 };
 
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp).toLocaleDateString('es-AR', {
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-AR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric'
@@ -23,6 +27,31 @@ const formatDate = (timestamp: number) => {
 
 export default function MovementsScreen() {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
+  const [movements, setMovements] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchMovements = async () => {
+      try {
+        const response = await fetch(API_URL, { signal: controller.signal });
+        const data = await response.json();
+        setMovements(data);
+      } catch (error: any) {
+        if (error.name === 'AbortError' || error.message.includes('unexpected end of stream')) {
+          return;
+        }
+        console.error('Error cargando movimientos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMovements();
+
+    return () => controller.abort();
+  }, []);
 
   const filteredMovements = useMemo(() => {
     return movements.filter((item) => {
@@ -30,22 +59,24 @@ export default function MovementsScreen() {
       if (selectedFilter === 'expense') return item.type === 'expense';
       return true;
     });
-  }, [selectedFilter]);
+  }, [selectedFilter, movements]);
 
   const summary = useMemo(() => {
     let total = 0;
     let label = 'Balance total';
     if (selectedFilter === 'all') {
-      total = filteredMovements.reduce((acc, curr) => curr.type === 'income' ? acc + curr.amount : acc - curr.amount, 0);
+      total = filteredMovements.reduce((acc, curr) => curr.type === 'income' ? acc + Number(curr.amount) : acc - Number(curr.amount), 0);
     } else {
       label = selectedFilter === 'income' ? 'Total de ingresos' : 'Total de egresos';
-      total = filteredMovements.reduce((acc, curr) => acc + curr.amount, 0);
+      total = filteredMovements.reduce((acc, curr) => acc + Number(curr.amount), 0);
     }
     return { total, label };
   }, [filteredMovements, selectedFilter]);
 
-  const renderItem = ({ item }: { item: Movement }) => {
+  const renderItem = ({ item }: { item: any }) => {
     const isIncome = item.type === 'income';
+    const amount = Number(item.amount);
+    
     return (
       <View style={styles.movementItem}>
         <View style={styles.infoContainer}>
@@ -53,7 +84,7 @@ export default function MovementsScreen() {
           <ThemedText themeColor="textSecondary" style={styles.movementDate}>{formatDate(item.date)}</ThemedText>
         </View>
         <ThemedText style={[styles.amountText, isIncome ? styles.incomeText : styles.expenseText]}>
-          {isIncome ? `+ ${formatCurrency(item.amount)}` : `- ${formatCurrency(item.amount)}`}
+          {isIncome ? `+ ${formatCurrency(amount)}` : `- ${formatCurrency(amount)}`}
         </ThemedText>
       </View>
     );
@@ -93,19 +124,23 @@ export default function MovementsScreen() {
         </ThemedText>
       </View>
 
-      <FlatList
-        data={filteredMovements}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <ThemedText themeColor="textSecondary">No hay movimientos para este filtro.</ThemedText>
-          </View>
-        }
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 50 }} />
+      ) : (
+        <FlatList
+          data={filteredMovements}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContent}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <ThemedText themeColor="textSecondary">No hay movimientos para este filtro.</ThemedText>
+            </View>
+          }
+        />
+      )}
     </ThemedView>
   );
 }
