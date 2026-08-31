@@ -7,7 +7,7 @@ import MovementItem from '@/components/movement-item'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import Header from '@/components/Header'
-import { BottomTabInset, MaxContentWidth, Spacing, GlobalStyles, Colors } from '@/constants/theme'
+import { MaxContentWidth, Spacing, GlobalStyles, Colors } from '@/constants/theme'
 
 const API_URL = 'http://localhost:3000/api/movements';
 
@@ -46,7 +46,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <Header />
 
         <ThemedView style={[GlobalStyles.card, styles.balanceCardLayout]}>
@@ -98,7 +98,6 @@ export default function HomeScreen() {
         </ThemedView>
 
         <ThemedView style={styles.movementsList}>
-          {/* 3. Validamos si está cargando para mostrar el spinner */}
           {isLoading ? (
             <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 50 }} />
           ) : (
@@ -108,7 +107,7 @@ export default function HomeScreen() {
               keyExtractor={(item) => String(item.id)}
               renderItem={({ item }) => <MovementItem movement={item} />}
               ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-              contentContainerStyle={{ paddingBottom: BottomTabInset + Spacing.four }}
+              contentContainerStyle={{ paddingBottom: 20 }}
             />
           )}
         </ThemedView>
@@ -122,7 +121,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.four, paddingTop: Spacing.four,
-    paddingBottom: BottomTabInset + Spacing.three,
     maxWidth: MaxContentWidth,
   },
   balanceCardLayout: { marginBottom: Spacing.four },
