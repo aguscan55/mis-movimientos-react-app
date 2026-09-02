@@ -1,6 +1,6 @@
 ﻿import { DarkTheme, DefaultTheme, ThemeProvider, Tabs, Redirect, useSegments } from 'expo-router';
 import { Platform, useColorScheme } from 'react-native';
-import { Home, List, CreditCard, User } from 'lucide-react-native';
+import { Home, List, CreditCard, User, QrCode } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CardsProvider } from '@/components/cards-context';
@@ -108,6 +108,13 @@ export default function RootLayout() {
                   href: null, 
                   tabBarStyle: { display: 'none' } 
                 }} 
+              />
+              <Tabs.Screen
+                name="pago"
+                options={{
+                  title: 'Pago',
+                  tabBarIcon: ({ color, size }) => <QrCode color={color} size={size} />,
+                }}
               />
             </Tabs>
           </AuthGuard>
