@@ -5,9 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CardsProvider } from '@/components/cards-context';
 import { AuthProvider, useAuth } from '@/context/auth-context';
-import StorybookUIRoot from '../../.rnstorybook';
-
-const SHOW_STORYBOOK = false;
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
@@ -29,10 +26,6 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
-  if (SHOW_STORYBOOK) {
-    return <StorybookUIRoot />;
-  }
-
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const insets = useSafeAreaInsets();

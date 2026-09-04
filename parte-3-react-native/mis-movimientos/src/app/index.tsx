@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { Pressable, StyleSheet, Text, FlatList, View, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Eye, EyeOff } from 'lucide-react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import MovementItem from '@/components/movement-item'
 import { ThemedText } from '@/components/themed-text'
@@ -21,7 +22,16 @@ export default function HomeScreen() {
   useEffect(() => {
     const fetchMovements = async () => {
       try {
-        const response = await fetch(API_URL);
+        const token = await AsyncStorage.getItem('userToken'); // Obtenemos el token
+        const response = await fetch(API_URL, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Enviamos el token al backend
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) throw new Error('Error de autenticación o servidor');
+        
         const data = await response.json();
         setMovements(data);
       } catch (error) {

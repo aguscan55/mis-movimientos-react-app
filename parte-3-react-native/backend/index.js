@@ -1,9 +1,11 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); // Para encriptar contraseñas
-const jwt = require('jsonwebtoken'); // Para generar tokens
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const verifyToken = require('./authMiddleware');
 
 const app = express();
 const port = 3000;
@@ -19,34 +21,29 @@ const pool = mysql.createPool({
 });
 
 // ==========================================
-// RUTAS DE AUTENTICACIÓN
+// RUTAS DE AUTENTICACIÓN (Públicas)
 // ==========================================
 
-// Endpoint: Registro de usuario
 app.post('/api/register', async (req, res) => {
   const { name, email, password } = req.body;
   
   try {
-    // 1. Verificar si el email ya existe
     const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
       return res.status(400).json({ error: 'El email ya está registrado' });
     }
 
-    // 2. Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3. Insertar en la BD
     const [result] = await pool.query(
       'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
       [name, email, hashedPassword]
     );
 
-    // 4. Generar token
     const token = jwt.sign(
       { id: result.insertId, email }, 
       process.env.JWT_SECRET, 
-      { expiresIn: '7d' } // El token durará 7 días
+      { expiresIn: '7d' } 
     );
 
     res.status(201).json({
@@ -56,30 +53,25 @@ app.post('/api/register', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error en el servidor al registrar usuario' });
+    res.status(500).json({ error: 'Error al registrar usuario' });
   }
 });
 
-// Endpoint: Inicio de sesión
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   
   try {
-    // 1. Buscar al usuario
     const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
     const user = users[0];
-
-    // 2. Comparar la contraseña enviada con la encriptada
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // 3. Generar token
     const token = jwt.sign(
       { id: user.id, email: user.email }, 
       process.env.JWT_SECRET, 
@@ -93,19 +85,17 @@ app.post('/api/login', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error en el servidor al iniciar sesión' });
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 });
 
-
 // ==========================================
-// RUTAS DE MOVIMIENTOS
+// RUTAS DE MOVIMIENTOS (Privadas)
 // ==========================================
 
-app.get('/api/movements', async (req, res) => {
+app.get('/api/movements', verifyToken, async (req, res) => {
   try {
-    // Mejoramos esto agregando ORDER BY date DESC
-    const [rows] = await pool.query('SELECT * FROM movements ORDER BY date DESC');
+    const [rows] = await pool.query('SELECT * FROM movements WHERE user_id = ? ORDER BY date DESC', [req.user.id]);
     res.json(rows);
   } catch (error) {
     console.error(error);
@@ -113,17 +103,18 @@ app.get('/api/movements', async (req, res) => {
   }
 });
 
-app.post('/api/movements', async (req, res) => {
+app.post('/api/movements', verifyToken, async (req, res) => {
   const { title, date, amount, type } = req.body;
   
   try {
     const [result] = await pool.query(
-      'INSERT INTO movements (title, date, amount, type) VALUES (?, ?, ?, ?)',
-      [title, date, amount, type]
+      'INSERT INTO movements (user_id, title, date, amount, type) VALUES (?, ?, ?, ?, ?)',
+      [req.user.id, title, date, amount, type]
     );
     
     res.status(201).json({ 
       id: result.insertId, 
+      user_id: req.user.id,
       title, 
       date,
       amount, 
@@ -134,13 +125,14 @@ app.post('/api/movements', async (req, res) => {
     res.status(500).json({ error: 'Error al guardar el movimiento' });
   }
 });
+
 // ==========================================
-// RUTAS DE TARJETAS
+// RUTAS DE TARJETAS (Privadas)
 // ==========================================
 
-app.get('/api/cards', async (req, res) => {
+app.get('/api/cards', verifyToken, async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM cards ORDER BY created_at DESC');
+    const [rows] = await pool.query('SELECT * FROM cards WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
     res.json(rows);
   } catch (error) {
     console.error(error);
@@ -148,17 +140,18 @@ app.get('/api/cards', async (req, res) => {
   }
 });
 
-app.post('/api/cards', async (req, res) => {
+app.post('/api/cards', verifyToken, async (req, res) => {
   const { holder, number, expiry } = req.body;
   
   try {
     const [result] = await pool.query(
-      'INSERT INTO cards (holder, number, expiry) VALUES (?, ?, ?)',
-      [holder, number, expiry]
+      'INSERT INTO cards (user_id, holder, number, expiry) VALUES (?, ?, ?, ?)',
+      [req.user.id, holder, number, expiry]
     );
     
     res.status(201).json({ 
       id: result.insertId, 
+      user_id: req.user.id,
       holder, 
       number, 
       expiry 

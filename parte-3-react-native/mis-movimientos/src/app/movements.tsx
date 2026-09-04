@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FlatList, Pressable, StyleSheet, View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors, GlobalStyles } from '@/constants/theme';
@@ -35,7 +36,17 @@ export default function MovementsScreen() {
 
     const fetchMovements = async () => {
       try {
-        const response = await fetch(API_URL, { signal: controller.signal });
+        const token = await AsyncStorage.getItem('userToken'); // Obtenemos el token
+        const response = await fetch(API_URL, { 
+          signal: controller.signal,
+          headers: {
+            'Authorization': `Bearer ${token}`, // Enviamos el token al backend
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) throw new Error('Error de autenticación o servidor');
+
         const data = await response.json();
         setMovements(data);
       } catch (error: any) {

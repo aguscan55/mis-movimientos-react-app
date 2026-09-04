@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Recordá: 'http://localhost:3000/api' para Simulador iOS / Web
 // Usá 'http://10.0.2.2:3000/api' para Emulador Android
@@ -29,8 +29,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadStoredSession = async () => {
       try {
-        const storedUser = await SecureStore.getItemAsync('user_data');
-        if (storedUser) {
+        const storedUser = await AsyncStorage.getItem('userData');
+        const storedToken = await AsyncStorage.getItem('userToken');
+        
+        if (storedUser && storedToken) {
           setUser(JSON.parse(storedUser));
         }
       } catch (error) {
@@ -56,8 +58,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.error || 'Error al iniciar sesión');
     }
 
-    await SecureStore.setItemAsync('user_token', data.token);
-    await SecureStore.setItemAsync('user_data', JSON.stringify(data.user));
+    // Guardamos con AsyncStorage usando las mismas claves que busca el resto de la app
+    await AsyncStorage.setItem('userToken', data.token);
+    await AsyncStorage.setItem('userData', JSON.stringify(data.user));
     
     setUser(data.user);
   };
@@ -75,15 +78,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.error || 'Error al registrar usuario');
     }
 
-    await SecureStore.setItemAsync('user_token', data.token);
-    await SecureStore.setItemAsync('user_data', JSON.stringify(data.user));
+    await AsyncStorage.setItem('userToken', data.token);
+    await AsyncStorage.setItem('userData', JSON.stringify(data.user));
 
     setUser(data.user);
   };
 
   const logout = async () => {
-    await SecureStore.deleteItemAsync('user_token');
-    await SecureStore.deleteItemAsync('user_data');
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('userData');
     setUser(null);
   };
 
