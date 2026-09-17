@@ -1,8 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/context/auth-context';
-
-const API_URL = 'http://localhost:3000/api/cards';
+import { useApi } from '@/hooks/useApi';
 
 export type Card = {
   id: number | string;
@@ -25,30 +23,18 @@ export function CardsProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   
   const { user } = useAuth(); 
+  const { fetcher } = useApi();
 
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      
-      if (!token) return; 
-
-      const response = await fetch(API_URL, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) throw new Error('Error al cargar tarjetas');
-      
-      const data = await response.json();
+      const data = await fetcher('/cards');
       setCards(data);
     } catch (error) {
       console.error('Error cargando tarjetas:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetcher]);
 
   useEffect(() => {
     if (user) {
@@ -57,23 +43,14 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       setCards([]);
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, fetchCards]);
 
   const addCard = async (newCard: Omit<Card, 'id'> & { cvv?: string }) => {
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const response = await fetch(API_URL, {
+      const data = await fetcher('/cards', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
-        },
         body: JSON.stringify(newCard),
       });
-      
-      if (!response.ok) throw new Error('Error al guardar en el servidor');
-      
-      const data = await response.json();
       setCards((prevCards) => [data, ...prevCards]);
     } catch (error) {
       console.error('Error agregando tarjeta:', error);

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_URL = 'http://localhost:3000/api'; 
+import { useApi } from '@/hooks/useApi';
 
 type User = {
   id: number | string;
@@ -25,6 +24,8 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const { fetcher } = useApi();
 
   useEffect(() => {
     const loadStoredSession = async () => {
@@ -44,26 +45,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch(`${API_URL}/login`, {
+    const data = await fetcher('/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
     await AsyncStorage.setItem('userToken', data.token);
     await AsyncStorage.setItem('userData', JSON.stringify(data.user));
     setUser(data.user);
   };
 
   const register = async (name: string, email: string, password: string) => {
-    const response = await fetch(`${API_URL}/register`, {
+    const data = await fetcher('/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
     });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
     await AsyncStorage.setItem('userToken', data.token);
     await AsyncStorage.setItem('userData', JSON.stringify(data.user));
     setUser(data.user);
@@ -75,27 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-const completeTest = async () => {
+  const completeTest = async () => {
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      if (!token) return console.error("No hay token guardado");
-
-      const response = await fetch(`${API_URL}/user/investor-profile`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
-        }
-      });
-
-      if (response.ok) {
-        if (user) {
-          const updatedUser = { ...user, has_investor_profile: true };
-          setUser(updatedUser);
-          await AsyncStorage.setItem('userData', JSON.stringify(updatedUser));
-        }
-      } else {
-        console.error("Error en la respuesta del servidor:", response.status);
+      await fetcher('/user/investor-profile', { method: 'POST' });
+      
+      if (user) {
+        const updatedUser = { ...user, has_investor_profile: true };
+        setUser(updatedUser);
+        await AsyncStorage.setItem('userData', JSON.stringify(updatedUser));
       }
     } catch (error) {
       console.error("Error al completar el test:", error);

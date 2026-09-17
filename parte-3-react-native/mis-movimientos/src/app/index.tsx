@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 import Header from '@/components/Header'
 import { MaxContentWidth, Spacing, GlobalStyles, Colors } from '@/constants/theme'
+import { useApi } from '@/hooks/useApi';
 
 const API_URL = 'http://localhost:3000/api/movements';
 
@@ -19,23 +20,14 @@ export default function HomeScreen() {
   
   const [movements, setMovements] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { fetcher } = useApi();
 
   // useFocusEffect ejecuta esta función cada vez que la pantalla vuelve a estar activa
   useFocusEffect(
     useCallback(() => {
       const fetchMovements = async () => {
         try {
-          const token = await AsyncStorage.getItem('userToken');
-          const response = await fetch(API_URL, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
-          
-          if (!response.ok) throw new Error('Error de autenticación o servidor');
-          
-          const data = await response.json();
+          const data = await fetcher('/movements');
           setMovements(data);
         } catch (error) {
           console.error('Error cargando movimientos:', error);
@@ -45,7 +37,7 @@ export default function HomeScreen() {
       };
 
       fetchMovements();
-    }, [])
+    }, [fetcher]) // necesito que fetcher sea una dependencia
   );
 
   const filteredMovements = useMemo(() =>

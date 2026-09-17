@@ -4,9 +4,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing, GlobalStyles, Colors } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_URL = 'http://localhost:3000/api';
+import { useApi } from '@/hooks/useApi'; // Importamos el hook
 
 const TestInversorView = ({ onCompleteTest }: { onCompleteTest: () => void }) => (
   <View style={styles.centerContainer}>
@@ -40,7 +38,6 @@ const InversionesActivasView = ({
         Rendimiento anual estimado: 85%
       </ThemedText>
       
-      {/* Tarjeta con el total invertido */}
       <ThemedView style={styles.balanceCard}>
         <ThemedText style={{ color: Colors.textSecondary, marginBottom: 5 }}>Total Invertido</ThemedText>
         <ThemedText type="title" style={{ color: Colors.primary }}>
@@ -75,36 +72,29 @@ const InversionesActivasView = ({
 
 export default function InversionesScreen() {
   const { user, completeTest } = useAuth();
+  const { fetcher } = useApi(); // Extraemos la función del hook
   const [totalInvested, setTotalInvested] = useState(0);
   const [isInvesting, setIsInvesting] = useState(false);
 
-  // Trae los movimientos, filtra las inversiones y suma el total
   const fetchTotalInvested = async () => {
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const response = await fetch(`${API_URL}/movements`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const movements = await response.json();
-        const total = movements
-          .filter((m: any) => m.title === 'Inversion fondo comun' && m.type === 'expense')
-          .reduce((acc: number, curr: any) => acc + Number(curr.amount), 0);
-        setTotalInvested(total);
-      }
+      // Usamos el fetcher (ya devuelve el JSON y maneja el token internamente)
+      const movements = await fetcher('/movements');
+      const total = movements
+        .filter((m: any) => m.title === 'Inversion fondo comun' && m.type === 'expense')
+        .reduce((acc: number, curr: any) => acc + Number(curr.amount), 0);
+      setTotalInvested(total);
     } catch (error) {
       console.error("Error al cargar inversiones:", error);
     }
   };
 
-  // Se ejecuta cuando carga la pantalla si el usuario ya tiene el perfil de inversor
   useEffect(() => {
     if (user?.has_investor_profile) {
       fetchTotalInvested();
     }
   }, [user?.has_investor_profile]);
 
-  // Maneja la creación del movimiento de egreso
   const handleInvest = async (amount: string) => {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       return Alert.alert("Error", "Ingresá un monto válido mayor a 0");
@@ -112,28 +102,19 @@ export default function InversionesScreen() {
 
     setIsInvesting(true);
     try {
-      const token = await AsyncStorage.getItem('userToken');
-      const response = await fetch(`${API_URL}/movements`, {
+      // Usamos el fetcher enviando método y body
+      await fetcher('/movements', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({
           title: "Inversion fondo comun",
           amount: Number(amount),
-          type: "expense" // Guarda el registro como egreso
+          type: "expense"
         })
       });
-
-      if (response.ok) {
-        Alert.alert("¡Éxito!", `Invertiste $${amount} exitosamente.`);
-        fetchTotalInvested(); // Actualiza el total visible al instante
-      } else {
-        Alert.alert("Error", "No se pudo registrar la inversión.");
-      }
+      Alert.alert("¡Éxito!", `Invertiste $${amount} exitosamente.`);
+      fetchTotalInvested(); 
     } catch (error) {
-      Alert.alert("Error", "Hubo un problema de conexión.");
+      Alert.alert("Error", "No se pudo registrar la inversión.");
     } finally {
       setIsInvesting(false);
     }

@@ -1,11 +1,10 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { FlatList, Pressable, StyleSheet, View, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors, GlobalStyles } from '@/constants/theme';
-
-const API_URL = 'http://localhost:3000/api/movements';
+import { useApi } from '@/hooks/useApi'; // Importamos el hook
 
 type FilterType = 'all' | 'income' | 'expense';
 
@@ -30,39 +29,34 @@ export default function MovementsScreen() {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [movements, setMovements] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const { fetcher } = useApi(); // Extraemos la función
 
-  useEffect(() => {
-    const controller = new AbortController();
+  // Usamos useFocusEffect para que recargue al entrar a la pestaña
+  useFocusEffect(
+    useCallback(() => {
+      const controller = new AbortController();
 
-    const fetchMovements = async () => {
-      try {
-        const token = await AsyncStorage.getItem('userToken'); // Obtenemos el token
-        const response = await fetch(API_URL, { 
-          signal: controller.signal,
-          headers: {
-            'Authorization': `Bearer ${token}`, // Enviamos el token al backend
-            'Content-Type': 'application/json'
+      const fetchMovements = async () => {
+        try {
+          // Usamos el fetcher pasándole el signal de aborto
+          const data = await fetcher('/movements', { signal: controller.signal });
+          setMovements(data);
+        } catch (error: any) {
+          if (error.name === 'AbortError' || error.message?.includes('unexpected end of stream')) {
+            return;
           }
-        });
-        
-        if (!response.ok) throw new Error('Error de autenticación o servidor');
-
-        const data = await response.json();
-        setMovements(data);
-      } catch (error: any) {
-        if (error.name === 'AbortError' || error.message.includes('unexpected end of stream')) {
-          return;
+          console.error('Error cargando movimientos:', error);
+        } finally {
+          setIsLoading(false);
         }
-        console.error('Error cargando movimientos:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      };
 
-    fetchMovements();
+      fetchMovements();
 
-    return () => controller.abort();
-  }, []);
+      return () => controller.abort();
+    }, [fetcher])
+  );
 
   const filteredMovements = useMemo(() => {
     return movements.filter((item) => {
